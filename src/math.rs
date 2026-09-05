@@ -43,13 +43,14 @@ pub fn accuracy(pred: &Array2<f64>, labels: &Array1<usize>) -> usize {
     pred.rows()
         .into_iter()
         .zip(labels.iter())
-        .filter(|(row, &label)| {
-            row.iter()
-                .enumerate()
-                .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
-                .unwrap()
-                .0
-                == label
-        })
+        .filter(|(row, &label)| argmax(*row) == label)
         .count()
+}
+
+pub fn argmax(row: ndarray::ArrayView1<f64>) -> usize {
+    row.iter()
+        .enumerate()
+        .max_by(|a, b| a.1.partial_cmp(b.1).unwrap())
+        .unwrap()
+        .0
 }
